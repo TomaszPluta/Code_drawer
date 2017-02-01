@@ -1,0 +1,8 @@
+Requirements (application will be able to):
+
+Extract function from file and print on screen
+Save extracted function to file
+Find all calls from function definition
+Extracting multiple function from file and place it in list
+Visualize calls in quasi-graphic form 
+

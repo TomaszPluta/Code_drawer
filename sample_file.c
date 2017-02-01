@@ -1,0 +1,1 @@
+called_method();struct{int a = 0}; void foo(){	here_we_are()};
