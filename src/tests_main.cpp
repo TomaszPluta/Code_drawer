@@ -34,6 +34,7 @@ TEST(InitGoogleMockTest, test_extract_metod_from_file) {
 			"void foo(){"
 			"	here_we_are()"
 			"};";
+	sample_file.close();
 	string expected_result("void foo(){"
 			")here_we_are()"
 			"};");
