@@ -17,18 +17,10 @@ using namespace std;
 
 string extract_method(string file_name)
 {
-	ifstream file_to_open;
+	ifstream file_to_open(file_name.c_str());
 	string content;
-	string line;
-	file_to_open.open(file_name.c_str());
 		if (file_to_open.is_open()) {
-
-			while ( getline (file_to_open,line) )
-		    {
-				cout << line << '\n';
-			}
-			file_to_open.close();
+			content.append((istreambuf_iterator<char>(file_to_open)),(istreambuf_iterator<char>()));
 		}
-
-	return line;
+	return content;
 }

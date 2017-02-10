@@ -36,7 +36,7 @@ TEST(InitGoogleMockTest, test_extract_metod_from_file) {
 			"};";
 	sample_file.close();
 	string expected_result("void foo(){"
-			")here_we_are()"
+			"here_we_are()"
 			"};");
 
 	string method;
