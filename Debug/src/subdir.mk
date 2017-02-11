@@ -5,15 +5,15 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../src/Code_drawer.cpp \
-../src/method_extractor.cpp 
+../src/function_extractor.cpp 
 
 OBJS += \
 ./src/Code_drawer.o \
-./src/method_extractor.o 
+./src/function_extractor.o 
 
 CPP_DEPS += \
 ./src/Code_drawer.d \
-./src/method_extractor.d 
+./src/function_extractor.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

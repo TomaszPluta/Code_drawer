@@ -6,13 +6,16 @@
 
 #include <iostream>
 #include <fstream>
-#include "method_extractor.h"
+
+/*local includes*/
+#include "Code_drawer.h"
+#include "function_extractor.h"
 
 using namespace std;
 
-//#define release
 
-#ifdef release
+
+#ifndef test
 int main() {
 
 	ofstream sample_file;
@@ -23,10 +26,15 @@ int main() {
 			"method_l1a()"
 			"method_l1b()"
 			"method_l1c()"
+			"}; "
+			"int main(){"
+			"method_l1d()"
+			"method_l1e()"
+			"method_l1f()"
 			"};";
 	sample_file.close();
 
-	extract_method("sample_file.c");
+	extract_functions("sample_file.c", "main");
 }
 
 #endif
