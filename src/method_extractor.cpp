@@ -30,7 +30,7 @@ string extract_method(string file_name)
 
 		string body_start = content.substr(pos);
 		string method_name = content.substr(pos3);
-		string returned_type = content.substr(pos4);
+		string returned_type = content.substr(pos4+1);
 
 
 
@@ -41,5 +41,5 @@ string extract_method(string file_name)
 
 
 		string method_body = content.substr(pos);
-	return method_body;
+	return returned_type;
 }
