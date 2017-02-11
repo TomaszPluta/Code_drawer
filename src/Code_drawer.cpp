@@ -10,7 +10,7 @@
 
 using namespace std;
 
-//#define release 1
+#define release 1
 
 #ifdef release
 int main() {
@@ -20,7 +20,7 @@ int main() {
 	sample_file << "called_method();"
 			"struct{int a = 0}; "
 			"void foo(){"
-			"	here_we_are()"
+			"here_we_are()"
 			"};";
 	sample_file.close();
 
