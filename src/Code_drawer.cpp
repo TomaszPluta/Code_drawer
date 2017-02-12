@@ -27,14 +27,16 @@ int main() {
 			"method_l1b()"
 			"method_l1c()"
 			"}; "
-			"int main(){"
-			"method_l1d()"
-			"method_l1e()"
-			"method_l1f()"
+			"int main(){ "
+			"method_l1d() "
+			"int x; "
+			"method_l1e() "
+			"method_l1f() "
 			"};";
 	sample_file.close();
 
-	extract_functions("sample_file.c", "main");
+//	extract_functions("sample_file.c", "main");
+	find_called("sample_file.c", "main");
 }
 
 #endif
