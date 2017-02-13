@@ -1,1 +1,1 @@
-called_method();struct{int a = 0}; void foo(){method_l1a()method_l1b()method_l1c()}; int main(){ method_l1d() int x; method_l1e() method_l1f() };
+called_method();struct{int a = 0}; void foo(){method_l1a();int x;method_l1b();method_l1c();}; int main(){method_l1d();int x;method_l1e();method_l1f();};

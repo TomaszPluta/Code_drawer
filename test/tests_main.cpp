@@ -71,9 +71,10 @@ TEST(InitGoogleMockTest, test_extract_desired_function_from_file) {
 			"};";
 	sample_file.close();
 	string expected_result("int main(){"
-			"method_l1d()"
-			"method_l1e()"
-			"method_l1f()"
+			"method_l1d();"
+			"int x;"
+			"method_l1e();"
+			"method_l1f();"
 			"};");
 
 	string method;
@@ -84,30 +85,33 @@ TEST(InitGoogleMockTest, test_extract_desired_function_from_file) {
 
 
 
-TEST(InitGoogleMockTest, test_find_called) {
 
-	ofstream sample_file;
-	sample_file.open("sample_file.c");
-	sample_file << "called_method();"
-			"struct{int a = 0}; "
-			"void foo(){"
-			"method_l1a()"
-			"method_l1b()"
-			"method_l1c()"
-			"}; ";
-	sample_file.close();
-	vector  <string> expected_called;
-	expected_called.push_back("method_l1a");
-	expected_called.push_back("method_l1b");
-	expected_called.push_back("method_l1c");
-	const int expected_called_count = 3;
 
-	vector  <string> finded_called = find_called("sample_file.c", "foo");
-	ASSERT_TRUE(finded_called.size() == expected_called_count);
-	EXPECT_STREQ(finded_called[0].c_str(), expected_called[0].c_str());
-	EXPECT_STREQ(finded_called[1].c_str(), expected_called[1].c_str());
-	EXPECT_STREQ(finded_called[2].c_str(), expected_called[2].c_str());
-};
+//
+//TEST(InitGoogleMockTest, test_find_called) {
+//
+//	ofstream sample_file;
+//	sample_file.open("sample_file.c");
+//	sample_file << "called_method();"
+//			"struct{int a = 0}; "
+//			"void foo(){"
+//			"method_l1a()"
+//			"method_l1b()"
+//			"method_l1c()"
+//			"}; ";
+//	sample_file.close();
+//	vector  <string> expected_called;
+//	expected_called.push_back("method_l1a");
+//	expected_called.push_back("method_l1b");
+//	expected_called.push_back("method_l1c");
+//	const int expected_called_count = 3;
+//
+//	vector  <string> finded_called = find_called("sample_file.c", "foo");
+//	ASSERT_TRUE(finded_called.size() == expected_called_count);
+//	EXPECT_STREQ(finded_called[0].c_str(), expected_called[0].c_str());
+//	EXPECT_STREQ(finded_called[1].c_str(), expected_called[1].c_str());
+//	EXPECT_STREQ(finded_called[2].c_str(), expected_called[2].c_str());
+//};
 
 
 

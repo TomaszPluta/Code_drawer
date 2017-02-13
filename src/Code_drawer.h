@@ -10,7 +10,7 @@
 
 
 
-//#define test
+#define test
 
 
 #endif /* CODE_DRAWER_H_ */

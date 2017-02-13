@@ -28,15 +28,15 @@ int main() {
 			"method_l1c()"
 			"}; "
 			"int main(){ "
-			"method_l1d() "
+			"method_l1d(arg1) "
 			"int x; "
 			"method_l1e() "
 			"method_l1f() "
 			"};";
 	sample_file.close();
 
-//	extract_functions("sample_file.c", "main");
-	find_called("sample_file.c", "main");
+	extract_functions("sample_file.c", "main");
+//	find_called("sample_file.c", "main");
 }
 
 #endif

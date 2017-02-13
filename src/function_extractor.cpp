@@ -70,18 +70,6 @@ string extract_functions(string file_name, string function_to_parse)
 	return returned_type;
 }
 
-//"struct{int a = 0}; "
-//"void foo(){"
-//"method_l1a()"
-//"method_l1b()"
-//"method_l1c()"
-//"}; "
-//"int main(){ "
-//" method_l1d()"
-//" int x;"
-//" method_l1e()"
-//" method_l1f()"
-//"};";
 
 vector  <string> find_called(string file_name, string function_to_parse)
 {
@@ -100,14 +88,17 @@ vector  <string> find_called(string file_name, string function_to_parse)
 
 
 	string function_arguments = file_content.substr(pos2);
-	string function_body = file_content.substr(pos3+1);
-	size_t len = pos2-pos3-1;
-	function_body.resize((int)len);
+	string function_name = file_content.substr(pos3+1);
+	string function_all = file_content.substr(pos4);
+
+	size_t len = pos4-pos3;
+	function_name.resize((int)len);
 
 
 	cout<< "founded calls: "<<endl;
 	cout <<pos2; cout<< " : " + function_arguments <<endl;
-	cout <<pos3; cout<<" : " + function_body <<endl;
+	cout <<pos3; cout<<" : " + function_name <<endl;
+
 
 	vector  <string> called_function;
 
