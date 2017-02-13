@@ -104,3 +104,44 @@ vector  <string> find_called(string file_name, string function_to_parse)
 
 	return called_function;
 }
+
+
+
+void FileToDraw::open(string file_name){
+	ifstream file_to_open(file_name.c_str());
+
+	if (file_to_open.is_open()){
+		file_content.append(istreambuf_iterator<char>(file_to_open), istreambuf_iterator<char>());
+	}
+}
+
+
+
+void FileToDraw::parse(){
+	size_t pos_body = file_content.find("){");
+	size_t pos_args = file_content.rfind("(", pos_body, 1);
+	size_t pos_name = file_content.rfind(" ", pos_args, 1);
+	size_t pos_ret_val = file_content.rfind(" ", pos_name-1, 1);
+	size_t pos_end_function = file_content.find("}", pos_body, 1);
+
+	string body_start = file_content.substr(pos_body);
+	string method_name = file_content.substr(pos_name);
+	string returned_type = file_content.substr(pos_ret_val+1);
+	string whole_function = file_content.substr(pos_ret_val+1);
+
+	size_t flen = pos_end_function - pos_ret_val;
+	returned_type.resize((int)flen);
+	whole_function.resize(flen);
+
+
+	cout <<whole_function;
+	function_bodys.push_back(whole_function);
+}
+
+
+
+
+string FileToDraw::get_function(string function_name){
+	//TODO: Do some search, but by now return first value from list
+	return function_bodys[0];
+}

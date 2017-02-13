@@ -29,58 +29,61 @@ using namespace std;
 
 TEST(InitGoogleMockTest, test_extract_function_from_file) {
 
-	ofstream sample_file;
-	sample_file.open("sample_file.c");
-	sample_file << "called_method();"
+	ofstream sample_file_on_disc;
+	sample_file_on_disc.open("sample_file.c");
+	sample_file_on_disc << "called_method();"
 			"struct{int a = 0}; "
 			"void foo(){"
 			"method_l1a()"
 			"method_l1b()"
 			"method_l1c()"
-			"};";
-	sample_file.close();
+			"}";
+	sample_file_on_disc.close();
+
+	FileToDraw sample_file ;
+	sample_file.open("sample_file.c");
+	sample_file.parse();
+	string foo_body = sample_file.get_function("foo");
+
 	string expected_result("void foo(){"
 			"method_l1a()"
 			"method_l1b()"
 			"method_l1c()"
-			"};");
+			"}");
+	EXPECT_STREQ(foo_body.c_str(), expected_result.c_str());
+}
 
-	string method;
-	method = extract_functions("sample_file.c");
-	EXPECT_STREQ(method.c_str(), expected_result.c_str());
-};
-
-
-TEST(InitGoogleMockTest, test_extract_desired_function_from_file) {
-
-	ofstream sample_file;
-	sample_file.open("sample_file.c");
-	sample_file << "called_method();"
-			"struct{int a = 0}; "
-			"void foo(){"
-			"method_l1a();"
-			"int x;"
-			"method_l1b();"
-			"method_l1c();"
-			"}; "
-			"int main(){"
-			"method_l1d();"
-			"int x;"
-			"method_l1e();"
-			"method_l1f();"
-			"};";
-	sample_file.close();
-	string expected_result("int main(){"
-			"method_l1d();"
-			"int x;"
-			"method_l1e();"
-			"method_l1f();"
-			"};");
-
-	string method;
-	method = extract_functions("sample_file.c", "main");
-	EXPECT_STREQ(method.c_str(), expected_result.c_str());
-};
+//
+//TEST(InitGoogleMockTest, test_extract_desired_function_from_file) {
+//
+//	ofstream sample_file;
+//	sample_file.open("sample_file.c");
+//	sample_file << "called_method();"
+//			"struct{int a = 0}; "
+//			"void foo(){"
+//			"method_l1a();"
+//			"int x;"
+//			"method_l1b();"
+//			"method_l1c();"
+//			"}; "
+//			"int main(){"
+//			"method_l1d();"
+//			"int x;"
+//			"method_l1e();"
+//			"method_l1f();"
+//			"};";
+//	sample_file.close();
+//	string expected_result("int main(){"
+//			"method_l1d();"
+//			"int x;"
+//			"method_l1e();"
+//			"method_l1f();"
+//			"};");
+//
+//	string method;
+//	method = extract_functions("sample_file.c", "main");
+//	EXPECT_STREQ(method.c_str(), expected_result.c_str());
+//};
 
 
 

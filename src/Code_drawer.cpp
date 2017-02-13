@@ -35,7 +35,11 @@ int main() {
 			"};";
 	sample_file.close();
 
-	extract_functions("sample_file.c", "main");
+	FileToDraw sample;
+	sample.open("sample_file.c");
+	sample.parse();
+
+//	extract_functions("sample_file.c", "main");
 //	find_called("sample_file.c", "main");
 }
 
