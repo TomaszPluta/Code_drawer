@@ -107,6 +107,13 @@ vector  <string> find_called(string file_name, string function_to_parse)
 
 
 
+ExtractedFunction::ExtractedFunction(string FName, string FBody)
+{
+	name = FName;
+	body = FBody;
+}
+
+
 void FileToDraw::open(string file_name){
 	ifstream file_to_open(file_name.c_str());
 
@@ -116,7 +123,6 @@ void FileToDraw::open(string file_name){
 }
 
 
-
 void FileToDraw::parse(){
 	size_t pos_body = file_content.find("){");
 	size_t pos_args = file_content.rfind("(", pos_body, 1);
@@ -124,24 +130,26 @@ void FileToDraw::parse(){
 	size_t pos_ret_val = file_content.rfind(" ", pos_name-1, 1);
 	size_t pos_end_function = file_content.find("}", pos_body, 1);
 
-	string body_start = file_content.substr(pos_body);
-	string method_name = file_content.substr(pos_name);
+	string body = file_content.substr(pos_body+1);
+	string name = file_content.substr(pos_name);
 	string returned_type = file_content.substr(pos_ret_val+1);
 	string whole_function = file_content.substr(pos_ret_val+1);
+
+	size_t fn_len =  pos_args - pos_name;
+	name.resize(fn_len);
+
+	size_t fb_len =  pos_end_function - pos_body;
+	body.resize(fb_len);
+
 
 	size_t flen = pos_end_function - pos_ret_val;
 	returned_type.resize((int)flen);
 	whole_function.resize(flen);
 
-
-	cout <<whole_function;
-	function_bodys.push_back(whole_function);
+	ExtractedFunction * function1 = new ExtractedFunction (name, body) ;
+	cout<< whole_function<<endl;
+	cout << name<<endl;
+	cout<< body<<endl;
+	functions.push_back(function1);
 }
 
-
-
-
-string FileToDraw::get_function(string function_name){
-	//TODO: Do some search, but by now return first value from list
-	return function_bodys[0];
-}
