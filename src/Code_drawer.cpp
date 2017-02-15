@@ -36,7 +36,7 @@ int main() {
 	sample_file.close();
 
 	FileToDraw sample;
-	sample.open("sample_file.c");
+	sample.open("sample2.c");
 	sample.parse();
 
 //	extract_functions("sample_file.c", "main");
