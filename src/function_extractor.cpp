@@ -11,7 +11,7 @@
 
 #include <iostream>
 #include <fstream>
-#include <string.h>
+#include <string>
 #include <stdint.h>
 using namespace std;
 
@@ -151,6 +151,21 @@ void FileToDraw::parse(){
 
 				size_t fb_len =  pos_end_function - pos_body;
 				body.resize(fb_len);
+
+
+				size_t pos_comment;
+				size_t pos_new_line;
+				pos_comment= body.find("//", 0, 2);
+				if (pos_comment !=  string::npos)
+				{
+					pos_new_line = body.find("\n", 0, 1);
+					if (pos_new_line  !=  string::npos)
+					{
+						int len = pos_new_line - pos_comment;
+						body.erase(pos_comment, len);
+					}
+				}
+
 
 				size_t flen = pos_end_function - pos_ret_val;
 				returned_type.resize((int)flen);
