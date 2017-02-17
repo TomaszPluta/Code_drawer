@@ -153,16 +153,19 @@ void FileToDraw::parse(){
 				body.resize(fb_len);
 
 
-				size_t pos_comment;
+				size_t pos_comment = 0;
 				size_t pos_new_line;
-				pos_comment= body.find("//", 0, 2);
-				if (pos_comment !=  string::npos)
+				while((pos_comment !=  string::npos) )
 				{
-					pos_new_line = body.find("\n", 0, 1);
-					if (pos_new_line  !=  string::npos)
+				pos_comment= body.find("//", pos_comment, 2);
+					if (pos_comment !=  string::npos)
 					{
-						int len = pos_new_line - pos_comment;
-						body.erase(pos_comment, len);
+						pos_new_line = body.find("\n", pos_comment, 1);
+						if (pos_new_line  !=  string::npos)
+						{
+							int len = pos_new_line - pos_comment;
+							body.erase(pos_comment, len);
+						}
 					}
 				}
 
@@ -172,8 +175,9 @@ void FileToDraw::parse(){
 				whole_function.resize(flen);
 
 				ExtractedFunction * function = new ExtractedFunction (name, body);
-				cout<< pos_name<<endl;
-				cout << "FUNKCJA:  " +name<<endl;
+				cout<< endl<< "-!- FOUND -!-"<<endl;
+				cout<< "LINE: " << pos_name<<endl;
+				cout << "FUNCTION NAME:  " +name<<endl;
 				cout << body<<endl;
 				functions.push_back(function);
 				pos_body = pos_end_function;
