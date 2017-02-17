@@ -12,7 +12,7 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
-
+#include <stdint.h>
 using namespace std;
 
 
@@ -125,39 +125,70 @@ void FileToDraw::open(string file_name){
 
 void FileToDraw::parse(){
 	size_t pos_body = 0;
+	uint32_t i=0;
+	int j =0;
 
-	while (1)
+	while (j<30)
 	{
-		 pos_body = file_content.find("){", pos_body);
-			if (pos_body == string::npos)
-				break;
-		size_t pos_args = file_content.rfind("(", pos_body, 1);
-		size_t pos_name = file_content.rfind(" ", pos_args, 1);
-		size_t pos_ret_val = file_content.rfind(" ", pos_name-1, 1);
-		size_t pos_end_function = file_content.find("}", pos_body, 1);
+		 pos_body = file_content.find(")", pos_body, 1);
+		 for (i = pos_body; i < file_content.length(); )
+		  {
+			 i++;
+		    if (file_content.at(i) == '{'){
 
-		string body = file_content.substr(pos_body+1);
-		string name = file_content.substr(pos_name);
-		string returned_type = file_content.substr(pos_ret_val+1);
-		string whole_function = file_content.substr(pos_ret_val+1);
+		    	size_t pos_args = file_content.rfind("(", pos_body, 1);
+				size_t pos_name = file_content.rfind(" ", pos_args, 1);
+				size_t pos_ret_val = file_content.rfind(" ", pos_name-1, 1);
+				size_t pos_end_function = file_content.find("}", pos_body, 1);
 
-		size_t fn_len =  pos_args - pos_name;
-		name.resize(fn_len);
+				string body = file_content.substr(pos_body+1);
+				string name = file_content.substr(pos_name);
+				string returned_type = file_content.substr(pos_ret_val+1);
+				string whole_function = file_content.substr(pos_ret_val+1);
 
-		size_t fb_len =  pos_end_function - pos_body;
-		body.resize(fb_len);
+				size_t fn_len =  pos_args - pos_name;
+				name.resize(fn_len);
 
-		size_t flen = pos_end_function - pos_ret_val;
-		returned_type.resize((int)flen);
-		whole_function.resize(flen);
+				size_t fb_len =  pos_end_function - pos_body;
+				body.resize(fb_len);
 
-		ExtractedFunction * function = new ExtractedFunction (name, body);
-		cout << name<<endl;
-		cout << body<<endl;
-		functions.push_back(function);
-		pos_body = pos_end_function;
+				size_t flen = pos_end_function - pos_ret_val;
+				returned_type.resize((int)flen);
+				whole_function.resize(flen);
+
+				ExtractedFunction * function = new ExtractedFunction (name, body);
+				cout<< pos_name<<endl;
+				cout << "FUNKCJA:  " +name<<endl;
+				cout << body<<endl;
+				functions.push_back(function);
+				pos_body = pos_end_function;
+
+		    	break;
+
+
+
+
+		    }
+		    else if (( isspace(file_content.at(i))))
+		    {
+		    	continue;
+		    }
+		    else{
+		    	break;
+		    }
+		  }
+
+
+//		 iterator stringa inkrementuje sie gdy napotyka isspace, gdy napotka "{" zwraca pozycje,
+//		 a gdy napotka inny znak wrca do szukania ")" (robi continue bez wyodrebniania). Cala petla trwa do std::npos
+//		isspace;
+
+
+
+		 pos_body++;
+
+		j++;
 	}
-
 
 
 }
