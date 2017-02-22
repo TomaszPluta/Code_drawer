@@ -127,8 +127,8 @@ void FileToDraw::parse(){
 	size_t pos_body = 0;
 	uint32_t i=0;
 	int j =0;
-
-	while (j<30)
+int cnt =0;
+	while (j<100)
 	{
 		 pos_body = file_content.find(")", pos_body, 1);
 		 for (i = pos_body; i < file_content.length(); )
@@ -144,6 +144,26 @@ void FileToDraw::parse(){
 				string body = file_content.substr(pos_body+1);
 				string name = file_content.substr(pos_name);
 				string returned_type = file_content.substr(pos_ret_val+1);
+
+
+				if ( returned_type.compare(0, 2, "if") ==0)
+				{
+					continue;
+				}
+
+				if ( returned_type.compare(0, 2, "for") ==0)
+				{
+					continue;
+				}
+
+
+
+				if ( returned_type.compare(0, 5, "while") ==0)
+				{
+					continue;
+				}
+
+
 				string whole_function = file_content.substr(pos_ret_val+1);
 
 				size_t fn_len =  pos_args - pos_name;
@@ -175,6 +195,7 @@ void FileToDraw::parse(){
 				whole_function.resize(flen);
 
 				ExtractedFunction * function = new ExtractedFunction (name, body);
+				cnt++;
 				cout<< endl<< "-!- FOUND -!-"<<endl;
 				cout<< "LINE: " << pos_name<<endl;
 				cout << "FUNCTION NAME:  " +name<<endl;
@@ -207,6 +228,7 @@ void FileToDraw::parse(){
 		 pos_body++;
 
 		j++;
+		cout << endl<< cnt;
 	}
 
 
