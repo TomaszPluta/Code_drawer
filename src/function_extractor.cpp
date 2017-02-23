@@ -107,10 +107,12 @@ vector  <string> find_called(string file_name, string function_to_parse)
 
 
 
-ExtractedFunction::ExtractedFunction(string FName, string FBody)
+ExtractedFunction::ExtractedFunction(string name_, string body_, string args_, string retval_)
 {
-	name = FName;
-	body = FBody;
+	name = name_;
+	body = body_;
+	args = args_;
+	retval = retval_;
 }
 
 
@@ -123,11 +125,35 @@ void FileToDraw::open(string file_name){
 }
 
 
+string remove_comments_from_function (const string& body_)
+{
+	string body;
+	size_t pos_comment_mark = 0;
+	while((pos_comment_mark !=  string::npos) )
+	{
+		pos_comment_mark= body.find("//", pos_comment_mark, 2);
+		if (pos_comment_mark !=  string::npos)
+		{
+			size_t pos_end_line;
+			pos_end_line = body.find("\n", pos_comment_mark, 1);
+			if (pos_end_line  !=  string::npos)
+			{
+				int len = pos_end_line - pos_comment_mark;
+				body.erase(pos_comment_mark, len);
+			}
+		}
+	}
+	return body;
+}
+
+
+
+
 void FileToDraw::parse(){
 	size_t pos_body = 0;
 	uint32_t i=0;
 	int j =0;
-int cnt =0;
+	int cnt =0;
 	while (j<100)
 	{
 		 pos_body = file_content.find(")", pos_body, 1);
@@ -141,73 +167,53 @@ int cnt =0;
 				size_t pos_ret_val = file_content.rfind(" ", pos_name-1, 1);
 				size_t pos_end_function = file_content.find("}", pos_body, 1);
 
-				string body = file_content.substr(pos_body+1);
-				string name = file_content.substr(pos_name);
-				string returned_type = file_content.substr(pos_ret_val+1);
+				string name  = file_content.substr(pos_name);
+				size_t name_len =  pos_args - pos_name;
+				name.resize(name_len);
 
+				string body  = file_content.substr(pos_body+1);
+				size_t body_len =  pos_end_function - pos_body;
+				body.resize(body_len);
 
-				if ( returned_type.compare(0, 2, "if") ==0)
+				string args  = file_content.substr(pos_args);
+				size_t args_len =  pos_body - pos_args;
+				args.resize(args_len);
+
+				string retval = file_content.substr(pos_ret_val+1);
+				size_t retval_len = pos_name - pos_ret_val;
+				retval.resize(retval_len);
+
+				if ( retval.compare(0, 2, "if") ==0)
 				{
 					continue;
 				}
 
-				if ( returned_type.compare(0, 2, "for") ==0)
+				if ( retval.compare(0, 2, "for") ==0)
+				{
+					continue;
+				}
+
+
+				if ( retval.compare(0, 5, "while") ==0)
 				{
 					continue;
 				}
 
 
 
-				if ( returned_type.compare(0, 5, "while") ==0)
-				{
-					continue;
-				}
 
 
-				string whole_function = file_content.substr(pos_ret_val+1);
+				ExtractedFunction * function = new ExtractedFunction (name, body, args, retval);
+				functions.push_back(function);
 
-				size_t fn_len =  pos_args - pos_name;
-				name.resize(fn_len);
+				pos_body = pos_end_function;
 
-				size_t fb_len =  pos_end_function - pos_body;
-				body.resize(fb_len);
-
-
-				size_t pos_comment = 0;
-				size_t pos_new_line;
-				while((pos_comment !=  string::npos) )
-				{
-				pos_comment= body.find("//", pos_comment, 2);
-					if (pos_comment !=  string::npos)
-					{
-						pos_new_line = body.find("\n", pos_comment, 1);
-						if (pos_new_line  !=  string::npos)
-						{
-							int len = pos_new_line - pos_comment;
-							body.erase(pos_comment, len);
-						}
-					}
-				}
-
-
-				size_t flen = pos_end_function - pos_ret_val;
-				returned_type.resize((int)flen);
-				whole_function.resize(flen);
-
-				ExtractedFunction * function = new ExtractedFunction (name, body);
 				cnt++;
 				cout<< endl<< "-!- FOUND -!-"<<endl;
 				cout<< "LINE: " << pos_name<<endl;
 				cout << "FUNCTION NAME:  " +name<<endl;
 				cout << body<<endl;
-				functions.push_back(function);
-				pos_body = pos_end_function;
-
 		    	break;
-
-
-
-
 		    }
 		    else if (( isspace(file_content.at(i))))
 		    {
@@ -217,12 +223,6 @@ int cnt =0;
 		    	break;
 		    }
 		  }
-
-
-//		 iterator stringa inkrementuje sie gdy napotyka isspace, gdy napotka "{" zwraca pozycje,
-//		 a gdy napotka inny znak wrca do szukania ")" (robi continue bez wyodrebniania). Cala petla trwa do std::npos
-//		isspace;
-
 
 
 		 pos_body++;

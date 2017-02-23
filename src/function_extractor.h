@@ -23,9 +23,11 @@ vector  <string> find_called(string function_to_parse);
 class ExtractedFunction{
 	string name;
 	string body;
+	string args;
+	string retval;
 	vector <ExtractedFunction *> called_functions;
 public:
-	ExtractedFunction(string FName, string FBody);
+	ExtractedFunction(string name_, string fbody_, string args_, string retval_);
 	string get_function_name();
 	vector <ExtractedFunction *> get_called();
 };
