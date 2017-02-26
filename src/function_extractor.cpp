@@ -125,9 +125,8 @@ void FileToDraw::open(string file_name){
 }
 
 
-string remove_comments_from_function (const string& body_)
+static void prv_remove_comments_from_function (string& body)
 {
-	string body;
 	size_t pos_comment_mark = 0;
 	while((pos_comment_mark !=  string::npos) )
 	{
@@ -141,82 +140,79 @@ string remove_comments_from_function (const string& body_)
 				int len = pos_end_line - pos_comment_mark;
 				body.erase(pos_comment_mark, len);
 			}
+			pos_comment_mark++;
 		}
 	}
-	return body;
+}
+
+
+
+
+static bool prv_is_controll_expression (const string& express)
+{
+	if ((express.compare(0, 2, "if")    ==0) ||
+		(express.compare(0, 2, "for")   ==0) ||
+	    (express.compare(0, 5, "while") ==0)) {
+			return true;
+	}
+	return false;
 }
 
 
 
 
 void FileToDraw::parse(){
-	size_t pos_body = 0;
+	size_t pos = 0;
 	uint32_t i=0;
 	int j =0;
 	int cnt =0;
-	while (j<100)
+	size_t fsize = file_content.size();
+	while (pos <= fsize)
 	{
-		 pos_body = file_content.find(")", pos_body, 1);
-		 for (i = pos_body; i < file_content.length(); )
-		  {
-			 i++;
-		    if (file_content.at(i) == '{'){
+		 pos = file_content.find(")", pos, 1);
+		 if (pos == string::npos){
+			 break;
+		 }
+		 while (pos < file_content.length() )
+		 {
 
-		    	size_t pos_args = file_content.rfind("(", pos_body, 1);
+		    if (file_content.at(pos) == '{'){
+
+		    	size_t pos_args = file_content.rfind("(", pos, 1);
 				size_t pos_name = file_content.rfind(" ", pos_args, 1);
 				size_t pos_ret_val = file_content.rfind(" ", pos_name-1, 1);
-				size_t pos_end_function = file_content.find("}", pos_body, 1);
+				size_t pos_end_function = file_content.find("}", pos, 1);
 
-				string name  = file_content.substr(pos_name);
-				size_t name_len =  pos_args - pos_name;
-				name.resize(name_len);
 
-				string body  = file_content.substr(pos_body+1);
-				size_t body_len =  pos_end_function - pos_body;
-				body.resize(body_len);
+				string retval = file_content.substr(pos_ret_val+1, (pos_name-pos_ret_val+1));
+				string name  = file_content.substr(pos_name, (pos_args-pos_name));
+				string body  = file_content.substr(pos+1, pos_end_function);
+				string args  = file_content.substr(pos_args, pos);
 
-				string args  = file_content.substr(pos_args);
-				size_t args_len =  pos_body - pos_args;
-				args.resize(args_len);
-
-				string retval = file_content.substr(pos_ret_val+1);
-				size_t retval_len = pos_name - pos_ret_val;
-				retval.resize(retval_len);
-
-				if ( retval.compare(0, 2, "if") ==0)
-				{
+				if (prv_is_controll_expression(retval))	{
+					pos++;
 					continue;
 				}
 
-				if ( retval.compare(0, 2, "for") ==0)
-				{
-					continue;
-				}
-
-
-				if ( retval.compare(0, 5, "while") ==0)
-				{
-					continue;
-				}
-
-
-
-
+				prv_remove_comments_from_function(body);
 
 				ExtractedFunction * function = new ExtractedFunction (name, body, args, retval);
 				functions.push_back(function);
 
-				pos_body = pos_end_function;
+				pos = pos_end_function;
 
 				cnt++;
 				cout<< endl<< "-!- FOUND -!-"<<endl;
 				cout<< "LINE: " << pos_name<<endl;
 				cout << "FUNCTION NAME:  " +name<<endl;
 				cout << body<<endl;
-		    	break;
+
+
+				break;
 		    }
 		    else if (( isspace(file_content.at(i))))
 		    {
+		    	pos++;
 		    	continue;
 		    }
 		    else{
@@ -224,8 +220,6 @@ void FileToDraw::parse(){
 		    }
 		  }
 
-
-		 pos_body++;
 
 		j++;
 		cout << endl<< cnt;
